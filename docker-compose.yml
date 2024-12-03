@@ -1,0 +1,35 @@
+version: '3.7'
+
+services:
+
+  mongodb:
+    container_name: mongodb
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: "123456"
+      MONGO_INITDB_DATABASE: admin
+    networks:
+      - my-net
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongodb:/data/db
+
+  mongo-express:
+    container_name: mongo-express
+    image: mongo-express
+    networks:
+      - my-net
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_ENABLE_ADMIN: true
+      ME_CONFIG_BASICAUTH_USERNAME: root
+      ME_CONFIG_BASICAUTH_PASSWORD: "123456"
+      ME_CONFIG_MONGODB_URL: "mongodb://root:123456@mongodb:27017/admin?ssl=false"
+      ME_CONFIG_MONGODB_PORT: 27017
+
+networks:
+  my-net:
+    driver: bridge
