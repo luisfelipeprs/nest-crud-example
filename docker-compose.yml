@@ -1,0 +1,37 @@
+services:
+  mongo:
+    build: ./mongodb_rs
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongo
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: admin
+      MONGO_REPLICA_HOST: localhost
+      MONGO_REPLICA_PORT: 27017
+    ports:
+      - '27017:27017'
+    command: >
+      bash -c "
+        mongod --port $MONGO_REPLICA_PORT --replSet rs0 --bind_ip 0.0.0.0 & 
+        until mongosh --port $MONGO_REPLICA_PORT --eval 'rs.initiate({_id: \"rs0\", members: [{ _id: 0, host: \"$MONGO_REPLICA_HOST:$MONGO_REPLICA_PORT\" }]})'; do sleep 1; done;
+        echo 'Replica set initialized';
+        wait"
+    networks:
+      - my-net
+
+  mongo-express:
+    container_name: mongo-express
+    image: mongo-express
+    networks:
+      - my-net
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_ENABLE_ADMIN: true
+      ME_CONFIG_BASICAUTH_USERNAME: root
+      ME_CONFIG_BASICAUTH_PASSWORD: "123456"
+      ME_CONFIG_MONGODB_URL: "mongodb://mongo:27017/admin?authSource=admin&replicaSet=rs0"
+
+networks:
+  my-net:
+    driver: bridge

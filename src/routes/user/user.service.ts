@@ -22,5 +22,16 @@ export class UserService {
     console.log("service user: ", user);
     return await this.userRepository.createUser(user);
   }
+  async updateUser(id: string, user: UserEntity) {
+    const updatedUser = await this.userRepository.updateUser(id, user);
+    if (!updatedUser) throw new NotFoundException('User Not Found');
+    return updatedUser;
+  }
+
+  async deleteUser(id: string) {
+    const deleted = await this.userRepository.deleteUser(id);
+    if (!deleted) throw new NotFoundException('User Not Found');
+    return deleted;
+  }
 
 }
