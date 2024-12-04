@@ -25,5 +25,16 @@ export class UserRepository {
     console.log("got user create > ", user);
     return this.collection.create({ data: user });
   }
+  updateUser(id: string, user: UserEntity) {
+    return this.collection.update({
+      where: { id },
+      data: user,
+    });
+  }
 
+  deleteUser(id: string) {
+    return this.collection.delete({
+      where: { id },
+    });
+  }
 }

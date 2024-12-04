@@ -1,4 +1,5 @@
 import { Post } from "@prisma/client";
+import { UserEntity } from "./user.entity";
 
 export class PostEntity implements Post {
   id: string;
@@ -6,7 +7,7 @@ export class PostEntity implements Post {
   content: string;
   createdAt: Date;
   updatedAt: Date;
-  author: string;
+  author?: UserEntity | null;
   authorId: string;
 
   constructor(post: PostEntity) {
@@ -20,7 +21,7 @@ export class PostEntity implements Post {
       content: 'This is a mock content',
       createdAt: new Date(),
       updatedAt: new Date(),
-      author: 'mock-author',
+      author: null,
       authorId: 'mock-author-id',
       ...partial,
     });
