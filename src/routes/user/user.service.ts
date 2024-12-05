@@ -1,15 +1,13 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { UserRepository } from "src/database/repositories/user.repository";
 import { UserEntity } from "src/entities/user.entity";
 import { UserDto } from "./dto/user.dto";
 import { hashPassword } from "src/utils/hashPassword";
 import { UserByIdDto } from "./dto/userById.dto";
-import { STATUS_CODES } from "http";
 
 @Injectable()
 export class UserService {
   constructor(private userRepository: UserRepository) { }
-
   
   async getUsers(): Promise<UserDto[]> {
     const users = await this.userRepository.getUsers()
@@ -24,6 +22,11 @@ export class UserService {
   }
 
   async createUser(data: { name: string; email: string; password: string }): Promise<UserDto> {
+    const userByEmail = await this.userRepository.userByEmail(data.email)
+    
+    if (userByEmail){
+      throw new ConflictException("A user with this email already exists");
+    }
     const hashedPassword = await hashPassword(data.password);
     const userEntity = new UserEntity({
       id: '',
