@@ -17,14 +17,19 @@ export class UserRepository {
 
   async getUsers() {
     const users = await this.collection.findMany();
-    console.log("users > ", users);
     return users;
   }
 
   createUser(user: UserEntity) {
-    console.log("got user create > ", user);
-    return this.collection.create({ data: user });
+    return this.collection.create({
+      data: {
+        name: user.name,
+        email: user.email,
+        password: user.password,
+      },
+    });
   }
+  
   updateUser(id: string, user: UserEntity) {
     return this.collection.update({
       where: { id },

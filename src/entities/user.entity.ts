@@ -1,16 +1,21 @@
 import { User } from "@prisma/client";
 import { Exclude } from "class-transformer";
-
+import { UserDto } from "src/routes/user/dto/user.dto";
+import { plainToInstance } from "class-transformer";
 
 export class UserEntity implements User {
   id: string;
   name: string;
   email: string;
-  @Exclude() // cant return password
+  @Exclude() // can't return password
   password: string;
 
   constructor(user: User) {
     Object.assign(this, user);
+  }
+
+  toDto(): UserDto {
+    return plainToInstance(UserDto, this);
   }
 
   static mock(partial?: Partial<User>): UserEntity {
