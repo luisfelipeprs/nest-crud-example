@@ -30,8 +30,7 @@ export class UserService {
     if (userByEmail) {
       throw new ConflictException("A user with this email already exists");
     }
-    // const hashedPassword = await hashPassword(data.password);
-    const hashedPassword = data.password
+    const hashedPassword = await hashPassword(data.password);
     const userEntity = new UserEntity({
       id: '',
       name: data.name,
@@ -58,17 +57,11 @@ export class UserService {
   async validateUser(email: string, password: string) {
     const user = await this.userRepository.userByEmail(email);
     console.log("user validate > ", user);
-    console.log("pass compare >", password , user.password);
-    if(argon2.verify("senha", "senha")){
-      var x = true
-    }
-    console.log(x);
-    
 
-    if (user && argon2.verify(password, user.password)) {
-      return user; // Retorna o usuário se a senha for válida
+    if (user && await argon2.verify(user.password, password)) {
+      return user; // senha valida
     }
-    return null; // Retorna null se as credenciais forem inválidas
+    return null; //  credencial invalida
   }
 
 }
