@@ -9,6 +9,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { PostModule } from './routes/post/post.module';
+import { AuthModule } from './routes/auth/auth.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -22,6 +23,7 @@ import { PostModule } from './routes/post/post.module';
     DatabaseModule,
     UserModule,
     PostModule,
+    AuthModule,
   ],
   providers: [
     {

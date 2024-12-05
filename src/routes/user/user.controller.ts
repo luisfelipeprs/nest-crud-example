@@ -1,25 +1,34 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, UsePipes, ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Req, UnauthorizedException, UseGuards, UsePipes, ValidationPipe } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { UserEntity } from "src/entities/user.entity";
 import { UserDto } from "./dto/user.dto";
 import { UserByIdDto } from "./dto/userById.dto";
 
+import { Request } from "express";
+import { JwtAuthGuard } from "../jwt-auth/jwt-auth.guard";
+
 @Controller('user')
-export class UserController{
-  constructor(private readonly userService : UserService){}
+export class UserController {
+  constructor(private readonly userService: UserService) { }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  getUserProfile(@Req() req) {
+    return this.userService.getUserById(req.user.userId); // Acessa o usuário pela chave `userId` extraída do JWT
+  }
 
   @Get()
   @UsePipes(new ValidationPipe({ transform: true }))
   getUsers(): Promise<UserDto[]> {
     return this.userService.getUsers()
   }
-  
+
   @Get(':id')
   async getUserById(@Param('id') id: string): Promise<UserByIdDto> {
     const user = await this.userService.getUserById(id);
     return user
   }
-  
+
 
   @Post()
   @HttpCode(201)
