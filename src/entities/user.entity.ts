@@ -1,6 +1,6 @@
 import { User } from "@prisma/client";
 import { Exclude } from "class-transformer";
-import { UserDto } from "src/routes/user/dto/user.dto";
+import { UserDto } from "../routes/user/dto/user.dto";
 import { plainToInstance } from "class-transformer";
 
 export class UserEntity implements User {

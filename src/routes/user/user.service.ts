@@ -1,8 +1,8 @@
 import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
-import { UserRepository } from "src/database/repositories/user.repository";
-import { UserEntity } from "src/entities/user.entity";
+import { UserRepository } from "../../database/repositories/user.repository";
+import { UserEntity } from "../../entities/user.entity";
 import { UserDto } from "./dto/user.dto";
-import { hashPassword } from "src/utils/hashPassword";
+import { hashPassword } from "../../utils/hashPassword";
 import { UserByIdDto } from "./dto/userById.dto";
 
 import * as argon2 from 'argon2';
